@@ -17,7 +17,7 @@ public class Capicua {
         num = sc.nextInt();
 
         System.out.println("(noRecursivo)El numero " + num + " es capicúa? " + capicuaNoRecursivo(num));
-     //   System.out.println("(recursivo)El numero " + num + " es capicúa? " + capicuaRecursivo(num));
+        System.out.println("(recursivo)El numero " + num + " es capicúa? " + capicuaRecursivo(num));
 
     }
 
@@ -37,9 +37,24 @@ public class Capicua {
         return true;
     }
 
-//    public static boolean capicuaRecursivo(int num) {
-//
-//        return ;
-//
-//    }
+    public static boolean capicuaRecursivo(int num) {
+
+        String numStr = String.valueOf(num);
+
+        if (numStr.length() > 2) {
+
+            int digitoInicio = numStr.charAt(0);
+            int digitoFinal = numStr.charAt(numStr.length() - 1);
+
+            if(digitoInicio != digitoFinal){
+                return false;
+            }
+
+            int nuevoNumero = Integer.parseInt(numStr.substring(1, numStr.length()-1));
+            return capicuaRecursivo(nuevoNumero);
+        } else {
+            return true;
+        }
+
+    }
 }
