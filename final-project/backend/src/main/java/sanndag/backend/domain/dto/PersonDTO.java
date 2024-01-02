@@ -8,7 +8,7 @@ import sanndag.backend.domain.entities.ProfessionEntity;
 @Builder
 @Data
 public class PersonDTO {
-    Long id;
+
     String name;
     String lastname;
     String dni;

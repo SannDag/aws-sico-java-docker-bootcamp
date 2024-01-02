@@ -10,6 +10,7 @@ public interface IPersonService {
 
     PersonEntity save(PersonEntity person);
     Optional<PersonEntity> findById(Long id);
+    Optional<PersonEntity> findByDni(String dni);
     List<PersonEntity> findAll();
     List<PersonEntity> findAllBySimilarName(String text);
     void delete(Long id);

@@ -8,7 +8,6 @@ import sanndag.backend.domain.entities.PersonEntity;
 public class PersonMapper {
     public PersonDTO entityToDto(PersonEntity person){
         return PersonDTO.builder()
-                .id(person.getId())
                 .name(person.getName())
                 .lastname(person.getLastname())
                 .dni(person.getDni())
@@ -23,7 +22,6 @@ public class PersonMapper {
 
     public PersonEntity dtoToEntity(PersonDTO personDto){
         return PersonEntity.builder()
-                .id(personDto.getId())
                 .name(personDto.getName())
                 .lastname(personDto.getLastname())
                 .dni(personDto.getDni())

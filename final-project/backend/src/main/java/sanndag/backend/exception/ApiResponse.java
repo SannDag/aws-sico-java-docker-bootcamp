@@ -11,9 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class ApiResponse {
 
-//    String incorrectRequest;
-//    String details;
-
     private Date time = new Date();
     private String message;
     private String url;
