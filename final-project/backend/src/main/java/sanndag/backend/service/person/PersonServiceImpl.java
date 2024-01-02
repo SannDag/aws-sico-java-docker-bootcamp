@@ -32,20 +32,32 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public PersonEntity save(PersonEntity person) {
+        var personDNI = person.getDni();
 
-        var personId = person.getId();
+        var existingPerson = personRepository.findByDni(personDNI);
 
-        personRepository.findById(personId).ifPresent(p -> {
-            throw new ResourceAlreadyExistsException("person", "id", personId);
-        });
+        if (!existingPerson.isEmpty()) {
+            throw new ResourceAlreadyExistsException("person", "dni", personDNI);
+        }
 
         return personRepository.save(person);
-
     }
 
     @Override
     public Optional<PersonEntity> findById(Long id) {
         return personRepository.findById(id);
+    }
+
+    @Override
+    public Optional<PersonEntity> findByDni(String dni) {
+
+        var existingPerson = personRepository.findByDni(dni);
+
+        if (existingPerson.isEmpty()) {
+            throw new ResourceNotFoundException("person", "dni", dni);
+        }
+
+        return personRepository.findByDni(dni);
     }
 
     @Override
@@ -85,15 +97,15 @@ public class PersonServiceImpl implements IPersonService {
         var existingPerson = personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("person", "id", id));
 
-        if (existingPerson.getName() != null) existingPerson.setName(person.getName());
-        if (existingPerson.getLastname() != null) existingPerson.setLastname(person.getLastname());
-        if (existingPerson.getDni() != null) existingPerson.setDni(person.getDni());
-        if (existingPerson.getAddress() != null) existingPerson.setAddress(person.getAddress());
-        if (existingPerson.getCity() != null) existingPerson.setCity(person.getCity());
-        if (existingPerson.getState() != null) existingPerson.setState(person.getState());
-        if (existingPerson.getCountry() != null) existingPerson.setCountry(person.getCountry());
-        if (existingPerson.getProfessionEntity() != null) existingPerson.setProfessionEntity(person.getProfessionEntity());
-        if (existingPerson.getCompanyEntity() != null) existingPerson.setCompanyEntity(person.getCompanyEntity());
+        if (person.getName() != null && !person.getName().isEmpty()) existingPerson.setName(person.getName());
+        if (person.getLastname() != null && !person.getLastname().isEmpty()) existingPerson.setLastname(person.getLastname());
+        if (person.getDni() != null && !person.getDni().isEmpty()) existingPerson.setDni(person.getDni());
+        if (person.getAddress() != null && !person.getAddress().isEmpty()) existingPerson.setAddress(person.getAddress());
+        if (person.getCity() != null && !person.getCity().isEmpty()) existingPerson.setCity(person.getCity());
+        if (person.getState() != null && !person.getState().isEmpty()) existingPerson.setState(person.getState());
+        if (person.getCountry() != null && !person.getCountry().isEmpty()) existingPerson.setCountry(person.getCountry());
+        if (person.getProfessionEntity() != null && !person.getProfessionEntity().getName().isEmpty()) existingPerson.setProfessionEntity(person.getProfessionEntity());
+        if (person.getCompanyEntity() != null && !person.getCompanyEntity().getName().isEmpty()) existingPerson.setCompanyEntity(person.getCompanyEntity());
 
         personRepository.save(existingPerson);
     }

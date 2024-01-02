@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sanndag.backend.domain.dto.PersonDTO;
 import sanndag.backend.domain.entities.PersonEntity;
 import sanndag.backend.domain.mapper.PersonMapper;
-import sanndag.backend.exception.ResourceAlreadyExistsException;
+import sanndag.backend.exception.BadRequestException;
 import sanndag.backend.exception.ResourceNotFoundException;
 import sanndag.backend.service.person.IPersonService;
 
@@ -26,22 +26,17 @@ public class PersonController {
 
     @PostMapping(("/save"))
     public ResponseEntity savePerson(@RequestBody PersonDTO dto){
-        try {
-            var dtoId = dto.getId();
 
-            personService.findById(dtoId).ifPresent(existingPerson -> {
-                throw new ResourceAlreadyExistsException("person", "id", dtoId);
-            });
+            var dtoDNI = dto.getDni();
+
+            if(dtoDNI == null || dtoDNI.isEmpty()){
+                throw new BadRequestException("The DNI number cannot be empty.");
+            }
 
             PersonEntity newPerson = personService.save(personMapper.dtoToEntity(dto));
             PersonDTO responseDto = personMapper.entityToDto(newPerson);
 
             return ResponseEntity.ok(responseDto);
-
-        } catch (Exception e) {
-            e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
-        }
     }
 
     @GetMapping("/{id}")
