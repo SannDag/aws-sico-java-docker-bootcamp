@@ -14,7 +14,7 @@ public class ProfessionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profession_id")
     private Long id;
-    @Column(name = "profession_name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 }
 
