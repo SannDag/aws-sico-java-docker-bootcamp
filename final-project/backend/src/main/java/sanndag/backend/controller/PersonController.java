@@ -1,7 +1,6 @@
 package sanndag.backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sanndag.backend.domain.dto.PersonDTO;
@@ -49,7 +48,7 @@ public class PersonController {
         return ResponseEntity.ok(dtoResponse);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<PersonDTO>> findAll(){
         List<PersonEntity> entityList = personService.findAll();
 
@@ -77,7 +76,7 @@ public class PersonController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         var entity = personService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("person", "id", id));
@@ -87,7 +86,7 @@ public class PersonController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<PersonDTO> update(@PathVariable Long id, @RequestBody PersonDTO personDTO){
         var entity = personService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("person", "id", id));
@@ -99,12 +98,13 @@ public class PersonController {
         return ResponseEntity.ok(personDTO);
     }
 
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity partialUpdate(@PathVariable Long id, @RequestBody Map<String, Object> update) {
         var entity = personService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("person", "id", id));
 
-        personService.partialUpdate(id, update);
+        personService.updateField(id, update);
+
         return ResponseEntity.ok().build();
     }
 

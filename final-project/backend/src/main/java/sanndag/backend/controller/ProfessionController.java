@@ -32,7 +32,7 @@ public class ProfessionController {
         return ResponseEntity.ok(dtoResponse);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<ProfessionDTO>> findAll(){
         List<ProfessionEntity> entityList = professionService.findAll();
 

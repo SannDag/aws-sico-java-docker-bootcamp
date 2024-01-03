@@ -1,7 +1,6 @@
 package sanndag.backend.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sanndag.backend.domain.dto.CompanyDTO;
@@ -30,7 +29,7 @@ public class CompanyController {
                 .orElseThrow(() -> new ResourceNotFoundException("company","id",id));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<CompanyDTO>> findAll(){
         List<CompanyEntity> entityList = companyService.findAll();
 
