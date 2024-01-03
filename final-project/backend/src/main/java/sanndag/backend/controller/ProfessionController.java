@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/professions")
-@CrossOrigin({"http://localhost:8080", "http://localhost:4200"})
+@CrossOrigin("${allowed.origins}")
 public class ProfessionController {
 
     private final IProfessionService professionService;
@@ -25,7 +25,7 @@ public class ProfessionController {
     @GetMapping("/{id}")
     public ResponseEntity<ProfessionDTO> getCompany(@PathVariable Long id){
         var entity = professionService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("The company with id " + id + " was not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("profession", "id", id));
 
         var dtoResponse = professionMapper.entityToDto(entity);
 
@@ -36,22 +36,34 @@ public class ProfessionController {
     public ResponseEntity<List<ProfessionDTO>> findAll(){
         List<ProfessionEntity> entityList = professionService.findAll();
 
-        List<ProfessionDTO> dtoResponse = entityList.stream()
-                .map(professionMapper::entityToDto)
-                .collect(Collectors.toList());
+        if(entityList.isEmpty()){
+            throw new ResourceNotFoundException("profession list");
+        } else {
 
-        return ResponseEntity.ok(dtoResponse);
+            List<ProfessionDTO> dtoResponse = entityList.stream()
+                    .map(professionMapper::entityToDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dtoResponse);
+        }
+
+
     }
 
     @GetMapping("/all/{text}")
     public ResponseEntity<List<ProfessionDTO>> findAllBySimilarName(@PathVariable String text){
         List<ProfessionEntity> entityList = professionService.findAllBySimilarName(text);
 
-        List<ProfessionDTO> dtoResponse = entityList.stream()
-                .map(professionMapper::entityToDto)
-                .collect(Collectors.toList());
+        if(entityList.isEmpty()){
+            throw new ResourceNotFoundException("profession list");
+        } else {
 
-        return ResponseEntity.ok(dtoResponse);
+            List<ProfessionDTO> dtoResponse = entityList.stream()
+                    .map(professionMapper::entityToDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dtoResponse);
+        }
 
     }
 }

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/companies")
-@CrossOrigin({"http://localhost:8080", "http://localhost:4200"})
+@CrossOrigin("${allowed.origins}")
 public class CompanyController {
 
     private final ICompanyService companyService;
@@ -33,14 +33,15 @@ public class CompanyController {
     public ResponseEntity<List<CompanyDTO>> findAll(){
         List<CompanyEntity> entityList = companyService.findAll();
 
-        List<CompanyDTO> dtoResponse = entityList.stream()
-                .map(companyMapper::entityToDto)
-                .collect(Collectors.toList());
-
-        if (!dtoResponse.isEmpty()) {
-            return ResponseEntity.ok(dtoResponse);
-        } else {
+        if (entityList.isEmpty()) {
             throw new ResourceNotFoundException("company list");
+        } else {
+
+            List<CompanyDTO> dtoResponse = entityList.stream()
+                    .map(companyMapper::entityToDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dtoResponse);
         }
     }
 
@@ -55,6 +56,7 @@ public class CompanyController {
             List<CompanyDTO> dtoResponse = entityList.stream()
                     .map(companyMapper::entityToDto)
                     .collect(Collectors.toList());
+
             return ResponseEntity.ok(dtoResponse);
         }
 

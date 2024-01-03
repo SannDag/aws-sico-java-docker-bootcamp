@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/persons")
-@CrossOrigin({"http://localhost:8080", "http://localhost:4200"})
+@CrossOrigin("${allowed.origins}")
 public class PersonController {
 
     private final IPersonService personService;
