@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import org.springframework.util.ReflectionUtils;
 import sanndag.backend.domain.entities.PersonEntity;
-import sanndag.backend.domain.entities.ProfessionEntity;
-import sanndag.backend.domain.mapper.CompanyMapper;
 import sanndag.backend.exception.ResourceAlreadyExistsException;
 import sanndag.backend.exception.ResourceNotFoundException;
 import sanndag.backend.repository.PersonRepository;
-import sanndag.backend.service.company.ICompanyService;
-import sanndag.backend.service.profession.IProfessionService;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +24,6 @@ import java.util.Optional;
 public class PersonServiceImpl implements IPersonService {
 
     private final PersonRepository personRepository;
-    private final IProfessionService professionService;
-    private final ICompanyService companyService;
-    private final CompanyMapper companyMapper;
 
     @Override
     public PersonEntity save(PersonEntity person) {
@@ -91,6 +86,7 @@ public class PersonServiceImpl implements IPersonService {
         personRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public void update(Long id, PersonEntity person) {
 
@@ -112,82 +108,27 @@ public class PersonServiceImpl implements IPersonService {
 
     @Transactional
     @Override
-    public void partialUpdate(Long id, Map<String, Object> updates) {
+    public PersonEntity updateField(Long id, Map<String, Object> fields) {
 
-        var existingPerson = personRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("person", "id", id));
+        Optional<PersonEntity> existingPerson = personRepository.findById(id);
 
-        updates.forEach((key, value) -> {
-            switch (key) {
-                case "name":
-                    existingPerson.setName((String) value);
-                    break;
-                case "lastname":
-                    existingPerson.setLastname((String) value);
-                    break;
-                case "dni":
-                    existingPerson.setDni((String) value);
-                    break;
-                case "address":
-                    existingPerson.setAddress((String) value);
-                    break;
-                case "city":
-                    existingPerson.setCity((String) value);
-                    break;
-                case "state":
-                    existingPerson.setState((String) value);
-                    break;
-                case "country":
-                    existingPerson.setCountry((String) value);
-                    break;
+        if (existingPerson.isPresent()) {
+            fields.forEach((key, value) -> {
+                Field field = ReflectionUtils.findField(PersonEntity.class, key);
+                if (field != null) {
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, existingPerson.get(), value);
+                } else {
+                    throw new IllegalArgumentException("Invalid field: " + key);
+                }
+            });
 
-                case "profession":
+            return personRepository.save(existingPerson.get());
 
-                    if (value instanceof Map<?, ?> professionInfo) {
-                        Object professionName = professionInfo.get("name");
-                        Object professionId = professionInfo.get("id");
-
-                        if (professionName instanceof String && professionId instanceof Long) {
-                            Long profId = (Long) professionId;
-                            String newName = (String) professionName;
-
-                            ProfessionEntity existingProfession = professionService.findById(profId)
-                                    .orElseThrow(() -> new ResourceNotFoundException("Profession with ID " + profId + " not found"));
-
-                            existingProfession.setName(newName);
-
-                            ProfessionEntity updatedProfession = professionService.updateEntity(existingProfession);
-
-                        }
-
-                        //todo
-
-//                        ProfessionEntity professionEntity = professionService.findById(Long.parseLong((String) value))
-//                                .orElseThrow(() -> new EntityNotFoundException("Profession with ID " + value + " not found."));
-//                        existingPerson.setProfession(professionEntity);
-                    }
-//                case "companyEntity":
-//                    //no estoy pudiendo hacer que funcione está actualiación
-//                    if (value instanceof Map) {
-//                        Map<String, Object> companyUpdate = (Map<String, Object>) value;
-//                        if (companyUpdate.containsKey("name")) {
-//                            String companyName = (String) companyUpdate.get("name");
-//
-//                            companyService.findByName(companyName)
-//                                    .ifPresent(existingPerson::setCompanyEntity);
-//
-//                        }
-//                    }
-//                    break;
-
-                default:
-                    break;
-            }
-        });
-
-        personRepository.save(existingPerson);
+        } else {
+            throw new ResourceNotFoundException("person", "id", id);
+        }
     }
-
 }
 
 

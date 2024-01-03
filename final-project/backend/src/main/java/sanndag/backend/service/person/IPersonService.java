@@ -15,6 +15,6 @@ public interface IPersonService {
     List<PersonEntity> findAllBySimilarName(String text);
     void delete(Long id);
     void update(Long id, PersonEntity person);
-    void partialUpdate(Long id, Map<String, Object> updates);
+    PersonEntity updateField(Long id, Map<String, Object> fields);
 
 }
