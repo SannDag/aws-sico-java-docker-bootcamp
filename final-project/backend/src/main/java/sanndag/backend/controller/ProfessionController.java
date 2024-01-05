@@ -1,5 +1,9 @@
 package sanndag.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,13 @@ public class ProfessionController {
 
     private final ProfessionMapper professionMapper;
 
+    @Operation(summary = "Get profession by ID.",
+            description = "Try to find a profession by ID; if it is not found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Profession not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ProfessionDTO> getCompany(@PathVariable Long id){
         var entity = professionService.findById(id)
@@ -32,6 +43,13 @@ public class ProfessionController {
         return ResponseEntity.ok(dtoResponse);
     }
 
+    @Operation(summary = "Get list of professions by ID.",
+            description = "Try to find a list of professions by ID; if none are found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Professions not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/")
     public ResponseEntity<List<ProfessionDTO>> findAll(){
         List<ProfessionEntity> entityList = professionService.findAll();
@@ -50,6 +68,13 @@ public class ProfessionController {
 
     }
 
+    @Operation(summary = "Get list of professions by ID.",
+            description = "Try to find a list of professions by ID; if none are found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Professions not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/all/{text}")
     public ResponseEntity<List<ProfessionDTO>> findAllBySimilarName(@PathVariable String text){
         List<ProfessionEntity> entityList = professionService.findAllBySimilarName(text);

@@ -1,5 +1,9 @@
 package sanndag.validation.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +14,18 @@ import sanndag.validation.service.IValidationService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/validate")
-@CrossOrigin({"http://localhost:8080", "http://localhost:4200"})
+@CrossOrigin("${allowed.origins}")
 public class ValidationController {
 
     private final IValidationService validationService;
 
+    @Operation(summary = "Name validation.",
+            description = "Validates a name provided by the user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid name", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @PostMapping("/name")
     public ResponseEntity<String> validateName(@RequestBody ValidationDTO validationDTO) {
 
@@ -23,6 +34,13 @@ public class ValidationController {
                 : new ResponseEntity<>("Invalid name. Try again.", HttpStatus.BAD_REQUEST);
     }
 
+    @Operation(summary = "DNI validation.",
+            description = "Validates a DNI provided by the user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Bad Request - Invalid DNI", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @PostMapping("/dni")
     public ResponseEntity<String> validateDNI(@RequestBody ValidationDTO validationDTO) {
 

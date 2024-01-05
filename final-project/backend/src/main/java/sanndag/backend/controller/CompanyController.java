@@ -1,5 +1,9 @@
 package sanndag.backend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,13 @@ public class CompanyController {
 
     private final CompanyMapper companyMapper;
 
+    @Operation(summary = "Get company by ID",
+            description = "Try to find a company by ID; if it is not found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Company not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDTO> getCompany(@PathVariable Long id){
         return companyService.findById(id)
@@ -29,6 +40,13 @@ public class CompanyController {
                 .orElseThrow(() -> new ResourceNotFoundException("company","id",id));
     }
 
+    @Operation(summary = "Get list of companies",
+            description = "Try to find a list of companies; if none are found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Companies not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/")
     public ResponseEntity<List<CompanyDTO>> findAll(){
         List<CompanyEntity> entityList = companyService.findAll();
@@ -45,6 +63,13 @@ public class CompanyController {
         }
     }
 
+    @Operation(summary = "Get list of companies",
+            description = "Try to find a list of companies; if none are found, throw an exception.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Companies not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     @GetMapping("/all/{text}")
     public ResponseEntity<List<CompanyDTO>> findAllBySimilarName(@PathVariable String text){
         List<CompanyEntity> entityList = companyService.findAllBySimilarName(text);

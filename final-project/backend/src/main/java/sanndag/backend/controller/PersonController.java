@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sanndag.backend.domain.dto.PersonDTO;
@@ -32,7 +33,7 @@ public class PersonController {
     @Operation(summary = "Save new person",
                 description = "First, validate that the DNI is not null or empty")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "201", description = "Operation successful, resource created", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
             })
@@ -48,13 +49,13 @@ public class PersonController {
             PersonEntity newPerson = personService.save(personMapper.dtoToEntity(dto));
             PersonDTO responseDto = personMapper.entityToDto(newPerson);
 
-            return ResponseEntity.ok(responseDto);
+            return new ResponseEntity (responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get person by ID",
             description = "Find a person by ID and throw an exception if it was not found.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
@@ -71,8 +72,8 @@ public class PersonController {
     @Operation(summary = "Get all persons",
             description = "Find a list of persons and throw an exception if the list is empty.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Persons not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/")
@@ -92,8 +93,8 @@ public class PersonController {
     @Operation(summary = "Get all persons by similar letter on name",
             description = "Retrieve a list of persons whose names match the specified letter(s) provided by the user. Throw an exception if the resulting list is empty.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "Persons not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/all/{text}")
@@ -113,7 +114,7 @@ public class PersonController {
     @Operation(summary = "Delete person by ID",
             description = "Delete a person with the specified ID provided by the user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "204", description = "Operation successful, but no content is available to display", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
@@ -130,7 +131,7 @@ public class PersonController {
     @Operation(summary = "Update person by ID",
             description = "Update the fields of a person with the specified ID provided by the user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
@@ -143,13 +144,13 @@ public class PersonController {
 
         personService.update(id, entity);
 
-        return ResponseEntity.ok(personDTO);
+        return new ResponseEntity (personDTO, HttpStatus.OK);
     }
 
     @Operation(summary = "Patch person by ID",
             description = "Partially update the fields of a person with the specified ID provided by the user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Operation Ok", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Operation Ok", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "Person not found", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
