@@ -9,14 +9,12 @@ public class CompanyMapper {
 
     public CompanyDTO entityToDto(CompanyEntity companyEntity){
         return CompanyDTO.builder()
-                .id(companyEntity.getId())
                 .name(companyEntity.getName())
                 .build();
     }
 
     public CompanyEntity dtoToEntity(CompanyDTO companyDTO){
         return CompanyEntity.builder()
-                .id(companyDTO.getId())
                 .name(companyDTO.getName())
                 .build();
 

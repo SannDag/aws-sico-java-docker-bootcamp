@@ -17,5 +17,5 @@ public class PersonDTO {
     String state;
     String country;
     ProfessionEntity profession;
-    CompanyEntity companyEntity;
+    CompanyEntity company;
 }

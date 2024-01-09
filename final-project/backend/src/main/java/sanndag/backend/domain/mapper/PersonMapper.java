@@ -16,7 +16,7 @@ public class PersonMapper {
                 .state(person.getState())
                 .country(person.getCountry())
                 .profession(person.getProfessionEntity())
-                .companyEntity(person.getCompanyEntity())
+                .company(person.getCompanyEntity())
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class PersonMapper {
                 .state(personDto.getState())
                 .country(personDto.getCountry())
                 .professionEntity(personDto.getProfession())
-                .companyEntity(personDto.getCompanyEntity())
+                .companyEntity(personDto.getCompany())
                 .build();
 
     }

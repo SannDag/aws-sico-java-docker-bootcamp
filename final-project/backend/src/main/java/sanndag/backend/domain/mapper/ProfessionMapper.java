@@ -9,14 +9,12 @@ public class ProfessionMapper {
 
     public ProfessionDTO entityToDto(ProfessionEntity professionEntity){
         return ProfessionDTO.builder()
-                .id(professionEntity.getId())
                 .name(professionEntity.getName())
                 .build();
     }
 
     public ProfessionEntity dtoToEntity(ProfessionDTO professionDTO){
         return ProfessionEntity.builder()
-                .id(professionDTO.getId())
                 .name(professionDTO.getName())
                 .build();
 

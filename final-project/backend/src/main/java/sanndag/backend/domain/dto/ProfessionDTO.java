@@ -6,6 +6,5 @@ import lombok.Data;
 @Builder
 @Data
 public class ProfessionDTO {
-    Long id;
     String name;
 }

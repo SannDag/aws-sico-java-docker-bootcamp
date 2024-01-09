@@ -34,13 +34,12 @@ public class ProfessionController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProfessionDTO> getCompany(@PathVariable Long id){
-        var entity = professionService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("profession", "id", id));
+    public ResponseEntity<ProfessionDTO> getProfession(@PathVariable Long id){
 
-        var dtoResponse = professionMapper.entityToDto(entity);
+        return professionService.findById(id)
+                .map(entity -> ResponseEntity.ok(professionMapper.entityToDto(entity)))
+                .orElseThrow(() -> new ResourceNotFoundException("profession","id",id));
 
-        return ResponseEntity.ok(dtoResponse);
     }
 
     @Operation(summary = "Get list of professions by ID.",
