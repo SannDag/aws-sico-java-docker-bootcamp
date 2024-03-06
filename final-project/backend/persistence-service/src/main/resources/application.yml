@@ -1,0 +1,54 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      #defaultZone: http://eurekasv:8761/eureka with docker
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+  application:
+    name: persistence-service
+
+# DB CONFIG
+spring:
+  datasource:
+    url: jdbc:${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# SWAGGER CONFIG
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+
+
+
+# SECURITY
+#jwt
+#jwt:
+#  secretKey: ${jwt.secret.key}
+#  expiration: ${jwt.time.expiration}
+
+#spring:
+#  security:
+#    user:
+#      name:
+#  security:
+#    user:
+#      password:
