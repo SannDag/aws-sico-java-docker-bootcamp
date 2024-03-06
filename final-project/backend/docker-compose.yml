@@ -1,0 +1,71 @@
+#version: '2.1'
+#services:
+#
+#  eurekasv:
+#    build: eurekasv
+#    mem_limit: 512m
+#    ports:
+#      - "8761:8761"
+#    networks:
+#      - 'project-network'
+#
+#  api-gateway:
+#    build: api-gateway
+#    mem_limit: 512m
+#    ports:
+#      - "443:443"
+#    networks:
+#      - 'project-network'
+#
+#  persistence-service:
+#    build: persistence-service
+#    mem_limit: 512m
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - 'project-network'
+#
+#  validatorservice:
+#    build: validatorservice
+#    mem_limit: 512m
+#    ports:
+#      - "8081:8081"
+#    networks:
+#      - 'project-network'
+#
+#  user-service:
+#    build: user-service
+#    mem_limit: 512m
+#    ports:
+#      - "8082:8082"
+#    networks:
+#      - 'project-network'
+#
+#  mysql-db-persistence-service:
+#    image: mysql:latest
+#    mem_limit: 512m
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root_password
+#      MYSQL_DATABASE: persistence_service_awbootcamp
+#      MYSQL_PASSWORD: root_password
+#    ports:
+#      - "3306:3306"
+#    networks:
+#      - 'project-network'
+#
+#  mysql-db-user-service:
+#    image: mysql:latest
+#    mem_limit: 512m
+#    environment:
+#      MYSQL_ROOT_PASSWORD: root_password
+#      MYSQL_DATABASE: user_service_awbootcamp
+#      MYSQL_PASSWORD: root_password
+#    ports:
+#      - "3307:3306"
+#    networks:
+#      - 'project-network'
+#
+#
+#
+#networks:
+#  project-network:
