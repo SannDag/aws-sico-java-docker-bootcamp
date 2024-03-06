@@ -1,0 +1,55 @@
+---
+
+server:
+  port: 443
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      global cors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      mvc:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/v1/user/**
+            filters:
+
+          - id: persistence-service
+            uri: lb://persistence-service
+            predicates:
+              - Path=/api/v1/persons/**
+            filters:
+
+          - id: validator-service
+            uri: lb://validator-service
+            predicates:
+              - Path=/api/v1/validator/**
+            filters:
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      #defaultZone: http://eurekasv:8761/eureka with docker
+
+
+
+
+
+jwt:
+  secret: RandomSecretKey123456789!RandomSecretKey123456789!RandomSecretKey123456789!
+
+...
